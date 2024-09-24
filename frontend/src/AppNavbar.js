@@ -28,13 +28,25 @@ function AppNavbar() {
     roles.forEach((role) => {
         if (role === "ADMIN") {
             adminLinks = (
-                <>                    
+                <>
                     <NavItem>
                         <NavLink style={{ color: "white" }} tag={Link} to="/users">Users</NavLink>
                     </NavItem>
+                    <NavItem>
+                        <NavLink style={{ color: "white" }} tag={Link} to="/developers">Developers</NavLink>
+                    </NavItem>
                 </>
             )
-        }        
+        }
+        if (role === "PLAYER") {
+            ownerLinks = (
+                <>
+                    <NavItem>
+                        <NavLink style={{ color: "white" }} tag={Link} to="/achievements">Achievements</NavLink>
+                    </NavItem>
+                </>
+            )
+        }
     })
 
     if (!jwt) {
