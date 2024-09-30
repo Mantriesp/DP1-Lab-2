@@ -5,12 +5,19 @@ import {
 import tokenService from "../services/token.service";
 import useFetchState from "../util/useFetchState";
 import { Link } from "react-router-dom";
+import deleteFromList from "./../util/deleteFromList";
+import { useState } from "react";
+import getErrorModal from "./../util/getErrorModal";
 
 const imgnotfound = "https://cdn-icons-png.flaticon.com/512/5778/5778223.png";
 const jwt = tokenService.getLocalAccessToken();
 
+
 export default function AchievementList() {
 
+    const [message, setMessage] = useState(null);
+    const [visible, setVisible] = useState(false);
+    const [alerts, setAlerts] = useState([]);
     const [achievements, setAchievements] = useFetchState(
         [],
         `/api/v1/achievements`,
@@ -29,10 +36,31 @@ export default function AchievementList() {
                     </td>
                     <td className="text-center"> {a.threshold} </td>
                     <td className="text-center"> {a.metric} </td>
-                    <td className="text-center"> --- </td>
+                    <td className="text-center">
+                        <Button outline color="warning" >
+                            <Link
+                                to={`/achievements/` + a.id}
+                                className="btn sm"
+                                style={{ textDecoration: "none" }}>Edit</Link>
+                        </Button>
+                        <Button outline color="danger"
+                            onClick={() =>
+                                deleteFromList(
+                                    `/api/v1/achievements/${a.id}`,
+                                    a.id,
+                                    [achievements, setAchievements],
+                                    [alerts, setAlerts],
+                                    setMessage,
+                                    setVisible
+                                )}>
+                            Delete
+                        </Button>
+
+                    </td>
                 </tr>
             );
         });
+        const modal = getErrorModal(setVisible, visible, message); 
 
     return (
         <div>
